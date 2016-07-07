@@ -1,16 +1,28 @@
+
+postgresql:
+  image: orchardup/postgresql:latest
+  environment:
+    - POSTGRESQL_USER=sonar
+    - POSTGRESQL_PASS=xaexohquaetiesoo
+    - POSTGRESQL_DB=sonar
+  volumes:
+    - /opt/db/sonarqube/:/var/lib/postgresql
+  ports:
+    - "5432:5432"
 sonarqube:
   image: sonarqube:5.6-alpine
   ports:
-   - "9000:9000"
-  external_links:
-   - sonar-db:db
+    - "9000:9000"
+    - "443"
+  links:
+    - postgresql:db
   environment:
-   - SONARQUBE_JDBC_URL=jdbc:mysql://db/sonar?useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true&useConfigs=maxPerformance
-   - SONARQUBE_JDBC_USERNAME=admin
-   - SONARQUBE_JDBC_PASSWORD=123456
+    - DB_USER=sonar
+    - DB_PASS=xaexohquaetiesoo
+    - DB_NAME=sonar
   volumes_from:
    - plugins
-  restart: always 
+  restart: always
 
 plugins:
   image: sonarqube:5.6-alpine
